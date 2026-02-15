@@ -1,0 +1,55 @@
+[project]
+name = "eco-feed"
+version = "0.1.0"
+description = "Platform for redistributing organic food waste"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi[standard]",
+    "uvicorn",
+    "tortoise-orm[asyncpg]",
+    "aerich==0.7.2",
+    "pydantic[email]",
+    "pydantic-settings",
+    "bcrypt",
+    "PyJWT",
+]
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-env",
+    "ruff",
+]
+
+[tool.mypy]
+python_version = '3.12'
+strict = true
+warn_return_any = true
+disallow_untyped_defs = true
+
+[tool.ruff]
+line-length = 120
+target-version = 'py312'
+
+[tool.ruff.lint]
+select = ['E', 'W', 'F', 'I', 'B', 'C4', 'UP', 'N', 'S', 'SIM', 'RUF']
+ignore = ['S101', 'E501']  # Allow asserts in tests
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = 'single'
+docstring-quotes = 'double'
+multiline-quotes = 'double'
+
+[tool.ruff.lint.per-file-ignores]
+'tests/*' = ['S101', 'S106']  # Allow asserts and hardcoded passwords in tests
+
+[tool.ruff.format]
+quote-style = 'single'
+indent-style = 'space'
+
+[tool.aerich]
+tortoise_orm = "src.db.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."
