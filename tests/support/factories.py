@@ -2,6 +2,7 @@ import uuid
 
 from src.modules.auth.service import hash_password
 from src.modules.offers.models import Offer, OfferStatus
+from src.modules.reservations.models import Reservation, ReservationStatus
 from src.modules.users.models import User, UserRole, UserStatus
 
 
@@ -63,3 +64,19 @@ class OfferFactory:
             'photos': [],
         }
         return await Offer.create(**{**defaults, **overrides})
+
+
+class ReservationFactory:
+    @staticmethod
+    async def create(
+        offer: Offer,
+        farmer: User,
+        status: ReservationStatus = ReservationStatus.ACTIVE,
+        **overrides,
+    ) -> Reservation:
+        defaults = {
+            'offer': offer,
+            'farmer': farmer,
+            'status': status,
+        }
+        return await Reservation.create(**{**defaults, **overrides})

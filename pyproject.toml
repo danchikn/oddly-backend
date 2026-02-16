@@ -12,6 +12,7 @@ dependencies = [
     "pydantic-settings",
     "bcrypt",
     "PyJWT",
+    "aioboto3"
 ]
 [project.optional-dependencies]
 dev = [

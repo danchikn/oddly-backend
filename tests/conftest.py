@@ -14,7 +14,7 @@ TORTOISE_TEST_CONFIG = {
     },
     'apps': {
         'models': {
-            'models': ['src.modules.users.models', 'src.modules.offers.models'],
+            'models': ['src.modules.users.models', 'src.modules.offers.models', 'src.modules.reservations.models'],
             'default_connection': 'default',
         },
     },

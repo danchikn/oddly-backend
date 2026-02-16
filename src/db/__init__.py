@@ -11,6 +11,7 @@ TORTOISE_ORM = {
             'models': [
                 'src.modules.users.models',
                 'src.modules.offers.models',
+                'src.modules.reservations.models',
                 'aerich.models',
             ],
             'default_connection': 'default',
