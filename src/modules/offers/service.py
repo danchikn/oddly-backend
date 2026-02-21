@@ -60,7 +60,7 @@ async def get_my_offers(
     page: int = 1,
     limit: int = 20,
 ) -> tuple[list[Offer], int]:
-    query = Offer.filter(owner=user)
+    query = Offer.filter(owner=user).select_related('owner')
     if status:
         query = query.filter(status=status)
     total = await query.count()
