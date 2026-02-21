@@ -22,7 +22,7 @@ async def create_offer(owner: User, data: CreateOfferRequest) -> Offer:
 
 
 async def get_offer_by_id(offer_id: UUID) -> Offer:
-    offer = await Offer.filter(id=offer_id).first()
+    offer = await Offer.filter(id=offer_id).select_related('owner').first()
     if not offer:
         raise NotFoundError(detail='Offer not found')
     return offer

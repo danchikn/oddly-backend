@@ -111,3 +111,18 @@ async def get_my_reservations(
     total = await query.count()
     items = await query.order_by('-created_at').offset((page - 1) * limit).limit(limit)
     return items, total
+
+
+async def get_incoming_reservations(
+    user: User,
+    status: ReservationStatus | None = None,
+    page: int = 1,
+    limit: int = 20,
+) -> tuple[list[Reservation], int]:
+    my_offer_ids = await Offer.filter(owner=user).values_list('id', flat=True)
+    query = Reservation.filter(offer_id__in=my_offer_ids)
+    if status:
+        query = query.filter(status=status)
+    total = await query.count()
+    items = await query.order_by('-created_at').offset((page - 1) * limit).limit(limit)
+    return items, total

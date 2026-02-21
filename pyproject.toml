@@ -1,5 +1,5 @@
 [project]
-name = "eco-feed"
+name = "oddly"
 version = "0.1.0"
 description = "Platform for redistributing organic food waste"
 requires-python = ">=3.11"

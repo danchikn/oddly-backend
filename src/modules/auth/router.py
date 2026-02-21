@@ -28,6 +28,7 @@ async def register(request: Request, body: RegisterRequest):
             phone_number=user.phone_number,
             role=user.role,
             name=user.name,
+            location_url=user.location_url,
             status=user.status.value,
         ),
     )
@@ -45,6 +46,7 @@ async def login(request: Request, body: LoginRequest):
             phone_number=user.phone_number,
             role=user.role,
             name=user.name,
+            location_url=user.location_url,
             status=user.status.value,
         ),
     )
@@ -58,5 +60,6 @@ async def me(user=Depends(get_current_user)):
         phone_number=user.phone_number,
         role=user.role,
         name=user.name,
+        location_url=user.location_url,
         status=user.status.value,
     )

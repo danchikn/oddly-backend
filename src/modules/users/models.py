@@ -22,6 +22,7 @@ class User(Model):
     role = fields.CharEnumField(UserRole)
     name = fields.CharField(max_length=255, null=True)
     password_hash = fields.CharField(max_length=255)
+    location_url = fields.TextField(null=True, default=None)
     status = fields.CharEnumField(UserStatus, default=UserStatus.ACTIVE)
     blocked_until = fields.DatetimeField(null=True)
     created_at = fields.DatetimeField(auto_now_add=True)

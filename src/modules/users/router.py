@@ -30,6 +30,7 @@ async def update_me(body: UpdateUserRequest, user: User = Depends(get_current_us
         phone_number=user.phone_number,
         role=user.role,
         name=user.name,
+        location_url=user.location_url,
         status=user.status.value,
     )
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 
-from src.modules.offers.dto import OfferListResponse, OfferResponse
+from src.modules.offers.dto import OfferListResponse, OfferResponse, OwnerInfo
 from src.modules.offers.models import Offer, OfferStatus
 
 router = APIRouter(prefix='/feed', tags=['feed'])
@@ -11,7 +11,7 @@ async def feed(
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
 ):
-    query = Offer.filter(status=OfferStatus.OPEN)
+    query = Offer.filter(status=OfferStatus.OPEN).select_related('owner')
     total = await query.count()
     items = await query.order_by('-created_at').offset((page - 1) * limit).limit(limit)
     return OfferListResponse(
@@ -25,6 +25,11 @@ async def feed(
                 pickup_to=o.pickup_to,
                 location_url=o.location_url,
                 photos=o.photos,
+                owner=OwnerInfo(
+                    id=o.owner.id,
+                    name=o.owner.name,
+                    phone_number=o.owner.phone_number,
+                ) if o.owner else None,
                 created_at=o.created_at,
                 updated_at=o.updated_at,
             )

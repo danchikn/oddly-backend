@@ -1,4 +1,4 @@
-# EcoFeed Backend
+# Oddly Backend
 
 Бэкенд платформы для перераспределения органических пищевых отходов между предприятиями общественного питания и фермерскими хозяйствами.
 
@@ -49,7 +49,7 @@ pytest
 
 | Переменная | Описание | По умолчанию |
 |---|---|---|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://postgres:postgres@localhost:5432/eco-feed` |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://postgres:postgres@localhost:5432/oddly` |
 | `JWT_SECRET` | Секрет для подписи токенов | `super-secret-change-me` |
 | `JWT_EXPIRE_MINUTES` | Время жизни токена (мин) | `1440` (24ч) |
 | `S3_ENDPOINT_URL` | URL S3-совместимого хранилища | — |

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Query, status
 from src.modules.auth.dependencies import get_current_user
 from src.modules.users.models import User
 
-from .dto import CreateOfferRequest, OfferListResponse, OfferResponse, UpdateOfferRequest
+from .dto import CreateOfferRequest, OfferListResponse, OfferResponse, OwnerInfo, UpdateOfferRequest
 from .models import OfferStatus
 from .service import cancel_offer, create_offer, get_my_offers, get_offer_by_id, update_offer
 
@@ -13,6 +13,13 @@ router = APIRouter(prefix='/offers', tags=['offers'])
 
 
 def _to_response(offer) -> OfferResponse:
+    owner = None
+    if hasattr(offer, 'owner') and offer.owner:
+        owner = OwnerInfo(
+            id=offer.owner.id,
+            name=offer.owner.name,
+            phone_number=offer.owner.phone_number,
+        )
     return OfferResponse(
         id=offer.id,
         owner_id=offer.owner_id,
@@ -22,6 +29,7 @@ def _to_response(offer) -> OfferResponse:
         pickup_to=offer.pickup_to,
         location_url=offer.location_url,
         photos=offer.photos,
+        owner=owner,
         created_at=offer.created_at,
         updated_at=offer.updated_at,
     )

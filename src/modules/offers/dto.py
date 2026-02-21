@@ -40,6 +40,12 @@ class UpdateOfferRequest(BaseModel):
         return v
 
 
+class OwnerInfo(BaseModel):
+    id: UUID
+    name: str | None
+    phone_number: str
+
+
 class OfferResponse(BaseModel):
     id: UUID
     owner_id: UUID
@@ -49,6 +55,7 @@ class OfferResponse(BaseModel):
     pickup_to: datetime | None
     location_url: str
     photos: list[str] | None
+    owner: OwnerInfo | None = None
     created_at: datetime
     updated_at: datetime
 

@@ -1,11 +1,11 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: ecofeed-db
+    container_name: oddly-db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: eco-feed
+      POSTGRES_DB: oddly
     ports:
       - "5432:5432"
     volumes:
@@ -18,11 +18,11 @@ services:
 
   app:
     build: .
-    container_name: ecofeed-app
+    container_name: oddly-app
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/eco-feed
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/oddly
       JWT_SECRET: super-secret-change-me-in-production
     depends_on:
       db:

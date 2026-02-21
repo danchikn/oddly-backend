@@ -1,4 +1,4 @@
-# EcoFeed Backend — Development Guide
+# Oddly Backend — Development Guide
 
 ## Стек
 
@@ -60,7 +60,7 @@ src/
 - Конфиг: `src/db/__init__.py` → `TORTOISE_ORM`
 - Модели: `src/modules/{module}/models.py`
 - URL конвертируется: `postgresql://` → `asyncpg://`
-- Тестовая БД: `localhost:5433/eco-feed-test` (docker-compose.test.yml)
+- Тестовая БД: `localhost:5433/oddly-test` (docker-compose.test.yml)
 
 ## Тесты
 

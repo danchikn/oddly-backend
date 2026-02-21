@@ -11,6 +11,7 @@ from .service import (
     cancel_reservation,
     complete_reservation,
     create_reservation,
+    get_incoming_reservations,
     get_my_reservations,
     get_reservation_by_id,
     get_reservation_for_user,
@@ -44,6 +45,22 @@ async def my_reservations(
     user: User = Depends(get_current_user),
 ):
     items, total = await get_my_reservations(user, status=status_filter, page=page, limit=limit)
+    return ReservationListResponse(
+        items=[_to_response(r) for r in items],
+        total=total,
+        page=page,
+        limit=limit,
+    )
+
+
+@router.get('/incoming', response_model=ReservationListResponse)
+async def incoming_reservations(
+    status_filter: ReservationStatus | None = Query(None, alias='status'),
+    page: int = Query(1, ge=1),
+    limit: int = Query(20, ge=1, le=100),
+    user: User = Depends(get_current_user),
+):
+    items, total = await get_incoming_reservations(user, status=status_filter, page=page, limit=limit)
     return ReservationListResponse(
         items=[_to_response(r) for r in items],
         total=total,

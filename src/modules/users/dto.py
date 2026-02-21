@@ -11,6 +11,7 @@ class UserResponse(BaseModel):
     phone_number: str
     role: UserRole
     name: str | None
+    location_url: str | None = None
     status: str
 
     class Config:
@@ -30,3 +31,4 @@ class UpdateUserRequest(BaseModel):
     name: str | None = None
     email: EmailStr | None = None
     phone_number: str | None = Field(None, min_length=5, max_length=20)
+    location_url: str | None = None

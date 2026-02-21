@@ -9,7 +9,7 @@ from tests.support.factories import UserFactory
 
 limiter.enabled = False
 
-TEST_DB_URL = 'asyncpg://postgres:postgres@localhost:5433/eco-feed-test'
+TEST_DB_URL = 'asyncpg://postgres:postgres@localhost:5433/oddly-test'
 
 TORTOISE_TEST_CONFIG = {
     'connections': {
