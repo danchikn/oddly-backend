@@ -1,6 +1,10 @@
+import logging
+
 from tortoise import Tortoise
 
 from src.core.config import settings
+
+logger = logging.getLogger(__name__)
 
 TORTOISE_ORM = {
     'connections': {
@@ -21,9 +25,15 @@ TORTOISE_ORM = {
 
 
 async def init_db() -> None:
-    await Tortoise.init(config=TORTOISE_ORM)
-    await Tortoise.generate_schemas()
+    try:
+        await Tortoise.init(config=TORTOISE_ORM)
+        await Tortoise.generate_schemas()
+        logger.info('Database connected')
+    except Exception:
+        logger.error('Database connection failed', exc_info=True)
+        raise
 
 
 async def close_db() -> None:
     await Tortoise.close_connections()
+    logger.info('Database disconnected')

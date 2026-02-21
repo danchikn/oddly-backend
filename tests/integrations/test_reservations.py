@@ -2,7 +2,7 @@ import pytest
 
 from src.modules.offers.models import Offer, OfferStatus
 from src.modules.reservations.models import Reservation, ReservationStatus
-from tests.support.factories import OfferFactory, ReservationFactory
+from tests.support.factories import OfferFactory, ReservationFactory, UserFactory
 
 
 @pytest.mark.asyncio
@@ -64,9 +64,47 @@ async def test_get_reservation_by_id(farmer_client, restaurant_user):
 
 
 @pytest.mark.asyncio
-async def test_get_reservation_not_found(client):
+async def test_get_reservation_not_found(farmer_client):
+    client, _ = farmer_client
     response = await client.get('/api/reservations/00000000-0000-0000-0000-000000000000')
     assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_get_reservation_no_auth(client, farmer_user, restaurant_user):
+    offer = await OfferFactory.create(owner=restaurant_user)
+    reservation = await ReservationFactory.create(offer=offer, farmer=farmer_user)
+    response = await client.get(f'/api/reservations/{reservation.id}')
+    assert response.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_get_reservation_not_participant(restaurant_user, farmer_user):
+    """Пользователь, не являющийся участником бронирования, получает 403."""
+    from httpx import ASGITransport, AsyncClient
+    from src.main import app
+    from tests.support.auth import make_auth_header
+
+    other_user = await UserFactory.create()
+    offer = await OfferFactory.create(owner=restaurant_user)
+    reservation = await ReservationFactory.create(offer=offer, farmer=farmer_user)
+
+    headers = make_auth_header(other_user)
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url='http://test', headers=headers) as ac:
+        response = await ac.get(f'/api/reservations/{reservation.id}')
+    assert response.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_get_reservation_by_offer_owner(restaurant_client, farmer_user):
+    """Владелец оффера тоже может просмотреть бронирование."""
+    client, restaurant = restaurant_client
+    offer = await OfferFactory.create(owner=restaurant)
+    reservation = await ReservationFactory.create(offer=offer, farmer=farmer_user)
+    response = await client.get(f'/api/reservations/{reservation.id}')
+    assert response.status_code == 200
+    assert response.json()['id'] == str(reservation.id)
 
 
 @pytest.mark.asyncio

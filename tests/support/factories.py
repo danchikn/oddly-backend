@@ -22,7 +22,7 @@ class UserFactory:
             'phone_number': _random_phone(),
             'role': 'RESTAURANT',
             'name': 'Test User',
-            'password': 'testpass123',
+            'password': 'Testpass123',
         }
         return {**defaults, **overrides}
 

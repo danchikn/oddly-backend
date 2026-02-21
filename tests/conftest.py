@@ -2,9 +2,12 @@ import pytest
 from httpx import ASGITransport, AsyncClient
 from tortoise import Tortoise
 
+from src.core.rate_limit import limiter
 from src.main import app
 from tests.support.auth import make_auth_header
 from tests.support.factories import UserFactory
+
+limiter.enabled = False
 
 TEST_DB_URL = 'asyncpg://postgres:postgres@localhost:5433/eco-feed-test'
 

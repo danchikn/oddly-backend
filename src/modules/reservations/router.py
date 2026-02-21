@@ -13,6 +13,7 @@ from .service import (
     create_reservation,
     get_my_reservations,
     get_reservation_by_id,
+    get_reservation_for_user,
 )
 
 router = APIRouter(prefix='/reservations', tags=['reservations'])
@@ -52,8 +53,8 @@ async def my_reservations(
 
 
 @router.get('/{reservation_id}', response_model=ReservationResponse)
-async def get_one(reservation_id: UUID):
-    reservation = await get_reservation_by_id(reservation_id)
+async def get_one(reservation_id: UUID, user: User = Depends(get_current_user)):
+    reservation = await get_reservation_for_user(reservation_id, user)
     return _to_response(reservation)
 
 

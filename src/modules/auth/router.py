@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Request, status
 
+from src.core.rate_limit import limiter
 from src.modules.users.dto import UserResponse
 
 from .dependencies import get_current_user
@@ -10,7 +11,8 @@ router = APIRouter(prefix='/auth', tags=['auth'])
 
 
 @router.post('/register', response_model=AuthResponse, status_code=status.HTTP_201_CREATED)
-async def register(body: RegisterRequest):
+@limiter.limit('3/minute')
+async def register(request: Request, body: RegisterRequest):
     user, token = await register_user(
         email=body.email,
         phone_number=body.phone_number,
@@ -32,7 +34,8 @@ async def register(body: RegisterRequest):
 
 
 @router.post('/login', response_model=AuthResponse)
-async def login(body: LoginRequest):
+@limiter.limit('5/minute')
+async def login(request: Request, body: LoginRequest):
     user, token = await login_user(identifier=body.identifier, password=body.password)
     return AuthResponse(
         access_token=token,

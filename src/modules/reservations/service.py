@@ -1,3 +1,4 @@
+import logging
 from uuid import UUID
 
 from tortoise.transactions import in_transaction
@@ -16,9 +17,12 @@ from .exceptions import (
 )
 from .models import Reservation, ReservationStatus
 
+logger = logging.getLogger(__name__)
+
 
 async def create_reservation(farmer: User, data: CreateReservationRequest) -> Reservation:
     if farmer.role != UserRole.FARMER:
+        logger.warning('Non-farmer tried to reserve: user_id=%s', farmer.id)
         raise NotFarmerError()
 
     async with in_transaction():
@@ -26,11 +30,13 @@ async def create_reservation(farmer: User, data: CreateReservationRequest) -> Re
         if not offer:
             raise NotFoundError(detail='Offer not found')
         if offer.status != OfferStatus.OPEN:
+            logger.warning('Attempt to reserve non-open offer: offer_id=%s, status=%s', data.offer_id, offer.status)
             raise OfferNotAvailableError()
 
         reservation = await Reservation.create(offer=offer, farmer=farmer)
         offer.status = OfferStatus.RESERVED
         await offer.save()
+    logger.info('Reservation created: reservation_id=%s, offer_id=%s, farmer_id=%s', reservation.id, data.offer_id, farmer.id)
     return reservation
 
 
@@ -39,6 +45,21 @@ async def get_reservation_by_id(reservation_id: UUID) -> Reservation:
     if not reservation:
         raise NotFoundError(detail='Reservation not found')
     return reservation
+
+
+async def get_reservation_for_user(reservation_id: UUID, user: User) -> Reservation:
+    reservation = await Reservation.filter(id=reservation_id).first()
+    if not reservation:
+        raise NotFoundError(detail='Reservation not found')
+
+    if reservation.farmer_id == user.id:
+        return reservation
+
+    offer = await Offer.filter(id=reservation.offer_id).first()
+    if offer and offer.owner_id == user.id:
+        return reservation
+
+    raise NotReservationParticipantError()
 
 
 async def cancel_reservation(reservation: Reservation, user: User) -> Reservation:
@@ -56,6 +77,7 @@ async def cancel_reservation(reservation: Reservation, user: User) -> Reservatio
             offer.status = OfferStatus.OPEN
             await offer.save()
 
+    logger.info('Reservation cancelled: reservation_id=%s, offer returned to OPEN', reservation.id)
     return reservation
 
 
@@ -73,6 +95,7 @@ async def complete_reservation(reservation: Reservation, user: User) -> Reservat
         offer.status = OfferStatus.COMPLETED
         await offer.save()
 
+    logger.info('Reservation completed: reservation_id=%s, offer_id=%s', reservation.id, reservation.offer_id)
     return reservation
 
 

@@ -2,6 +2,20 @@
 #    uv pip compile pyproject.toml -o requirements.txt
 aerich==0.7.2
     # via eco-feed (pyproject.toml)
+aioboto3==15.5.0
+    # via eco-feed (pyproject.toml)
+aiobotocore==2.25.1
+    # via aioboto3
+aiofiles==25.1.0
+    # via aioboto3
+aiohappyeyeballs==2.6.1
+    # via aiohttp
+aiohttp==3.13.3
+    # via aiobotocore
+aioitertools==0.13.0
+    # via aiobotocore
+aiosignal==1.4.0
+    # via aiohttp
 aiosqlite==0.22.1
     # via tortoise-orm
 annotated-doc==0.0.4
@@ -14,12 +28,20 @@ anyio==4.12.1
     # via
     #   httpx
     #   starlette
-    #   tortoise-orm
     #   watchfiles
 asyncpg==0.31.0
     # via tortoise-orm
+attrs==25.4.0
+    # via aiohttp
 bcrypt==5.0.0
     # via eco-feed (pyproject.toml)
+boto3==1.40.61
+    # via aiobotocore
+botocore==1.40.61
+    # via
+    #   aiobotocore
+    #   boto3
+    #   s3transfer
 certifi==2026.1.4
     # via
     #   httpcore
@@ -31,6 +53,8 @@ click==8.3.1
     #   rich-toolkit
     #   typer
     #   uvicorn
+deprecated==1.3.1
+    # via limits
 dictdiffer==0.9.0
     # via aerich
 dnspython==2.8.0
@@ -47,6 +71,10 @@ fastapi-cloud-cli==0.12.0
     # via fastapi-cli
 fastar==0.8.0
     # via fastapi-cloud-cli
+frozenlist==1.8.0
+    # via
+    #   aiohttp
+    #   aiosignal
 h11==0.16.0
     # via
     #   httpcore
@@ -64,16 +92,35 @@ idna==3.11
     #   anyio
     #   email-validator
     #   httpx
+    #   yarl
 iso8601==2.1.0
     # via tortoise-orm
 jinja2==3.1.6
     # via fastapi
+jmespath==1.1.0
+    # via
+    #   aiobotocore
+    #   boto3
+    #   botocore
+limits==5.8.0
+    # via slowapi
 markdown-it-py==4.0.0
     # via rich
 markupsafe==3.0.3
     # via jinja2
 mdurl==0.1.2
     # via markdown-it-py
+multidict==6.7.1
+    # via
+    #   aiobotocore
+    #   aiohttp
+    #   yarl
+packaging==26.0
+    # via limits
+propcache==0.4.1
+    # via
+    #   aiohttp
+    #   yarl
 pydantic==2.12.5
     # via
     #   eco-feed (pyproject.toml)
@@ -96,12 +143,18 @@ pyjwt==2.11.0
     # via eco-feed (pyproject.toml)
 pypika-tortoise==0.6.3
     # via tortoise-orm
+python-dateutil==2.9.0.post0
+    # via
+    #   aiobotocore
+    #   botocore
 python-dotenv==1.2.1
     # via
     #   pydantic-settings
     #   uvicorn
 python-multipart==0.0.22
     # via fastapi
+pytz==2025.2
+    # via tortoise-orm
 pyyaml==6.0.3
     # via uvicorn
 rich==14.3.2
@@ -114,15 +167,21 @@ rich-toolkit==0.19.4
     #   fastapi-cloud-cli
 rignore==0.7.6
     # via fastapi-cloud-cli
+s3transfer==0.14.0
+    # via boto3
 sentry-sdk==2.52.0
     # via fastapi-cloud-cli
 shellingham==1.5.4
     # via typer
+six==1.17.0
+    # via python-dateutil
+slowapi==0.1.9
+    # via eco-feed (pyproject.toml)
 starlette==0.52.1
     # via fastapi
 tomlkit==0.14.0
     # via aerich
-tortoise-orm==1.1.2
+tortoise-orm==0.25.1
     # via
     #   eco-feed (pyproject.toml)
     #   aerich
@@ -132,8 +191,10 @@ typer==0.23.1
     #   fastapi-cloud-cli
 typing-extensions==4.15.0
     # via
+    #   aiosignal
     #   anyio
     #   fastapi
+    #   limits
     #   pydantic
     #   pydantic-core
     #   pydantic-extra-types
@@ -146,7 +207,9 @@ typing-inspection==0.4.2
     #   pydantic
     #   pydantic-settings
 urllib3==2.6.3
-    # via sentry-sdk
+    # via
+    #   botocore
+    #   sentry-sdk
 uvicorn==0.40.0
     # via
     #   eco-feed (pyproject.toml)
@@ -159,3 +222,9 @@ watchfiles==1.1.1
     # via uvicorn
 websockets==16.0
     # via uvicorn
+wrapt==1.17.3
+    # via
+    #   aiobotocore
+    #   deprecated
+yarl==1.22.0
+    # via aiohttp

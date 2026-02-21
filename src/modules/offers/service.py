@@ -1,3 +1,4 @@
+import logging
 from uuid import UUID
 
 from src.core.exceptions import NotFoundError
@@ -7,13 +8,17 @@ from .dto import CreateOfferRequest, UpdateOfferRequest
 from .exceptions import NotOfferOwnerError, OfferNotCancellableError, OfferNotEditableError
 from .models import Offer, OfferStatus
 
+logger = logging.getLogger(__name__)
+
 NON_EDITABLE_STATUSES = {OfferStatus.COMPLETED, OfferStatus.CANCELLED}
 NON_CANCELLABLE_STATUSES = {OfferStatus.COMPLETED, OfferStatus.CANCELLED}
 
 
 async def create_offer(owner: User, data: CreateOfferRequest) -> Offer:
     fields = data.model_dump(exclude_none=True)
-    return await Offer.create(owner=owner, **fields)
+    offer = await Offer.create(owner=owner, **fields)
+    logger.info('Offer created: offer_id=%s, owner_id=%s', offer.id, owner.id)
+    return offer
 
 
 async def get_offer_by_id(offer_id: UUID) -> Offer:
@@ -35,6 +40,7 @@ async def update_offer(offer: Offer, user: User, data: UpdateOfferRequest) -> Of
     for key, value in data.model_dump(exclude_none=True).items():
         setattr(offer, key, value)
     await offer.save()
+    logger.info('Offer updated: offer_id=%s', offer.id)
     return offer
 
 
@@ -44,6 +50,7 @@ async def cancel_offer(offer: Offer, user: User) -> Offer:
         raise OfferNotCancellableError()
     offer.status = OfferStatus.CANCELLED
     await offer.save()
+    logger.info('Offer cancelled: offer_id=%s', offer.id)
     return offer
 
 

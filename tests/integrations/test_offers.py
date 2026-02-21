@@ -19,6 +19,30 @@ async def test_create_offer(restaurant_client):
 
 
 @pytest.mark.asyncio
+async def test_create_offer_invalid_url_javascript(restaurant_client):
+    client, _ = restaurant_client
+    payload = OfferFactory.build_payload(location_url='javascript:alert(1)')
+    response = await client.post('/api/offers', json=payload)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_create_offer_invalid_url_data(restaurant_client):
+    client, _ = restaurant_client
+    payload = OfferFactory.build_payload(location_url='data:text/html,<h1>hack</h1>')
+    response = await client.post('/api/offers', json=payload)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_update_offer_invalid_url(restaurant_client):
+    client, user = restaurant_client
+    offer = await OfferFactory.create(owner=user)
+    response = await client.patch(f'/api/offers/{offer.id}', json={'location_url': 'ftp://evil.com'})
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
 async def test_create_offer_no_auth(client):
     response = await client.post('/api/offers', json=OfferFactory.build_payload())
     assert response.status_code == 401

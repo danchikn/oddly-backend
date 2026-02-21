@@ -1,5 +1,9 @@
 import pytest
 
+from src.modules.users.models import UserStatus
+from tests.support.auth import make_auth_header
+from tests.support.factories import UserFactory
+
 
 @pytest.mark.asyncio
 async def test_register_success(client, register_payload):
@@ -65,9 +69,30 @@ async def test_login_deleted_user(restaurant_client):
     await client.post('/api/users/me/delete')
     response = await client.post('/api/auth/login', json={
         'identifier': user.email,
-        'password': 'testpass123',
+        'password': 'Testpass123',
     })
     assert response.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_register_weak_password_no_uppercase(client, register_payload):
+    register_payload['password'] = 'testpass123'
+    response = await client.post('/api/auth/register', json=register_payload)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_register_weak_password_no_digit(client, register_payload):
+    register_payload['password'] = 'Testpassword'
+    response = await client.post('/api/auth/register', json=register_payload)
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_register_password_too_short(client, register_payload):
+    register_payload['password'] = 'Tp1'
+    response = await client.post('/api/auth/register', json=register_payload)
+    assert response.status_code == 422
 
 
 @pytest.mark.asyncio
@@ -80,3 +105,23 @@ async def test_me_no_token(client):
 async def test_me_invalid_token(client):
     response = await client.get('/api/auth/me', headers={'Authorization': 'Bearer garbage'})
     assert response.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_me_deleted_user_token_rejected(client):
+    """Токен удалённого пользователя не должен работать."""
+    user = await UserFactory.create(status=UserStatus.DELETED)
+    headers = make_auth_header(user)
+    response = await client.get('/api/auth/me', headers=headers)
+    assert response.status_code == 401
+    assert response.json()['detail'] == 'Account deleted'
+
+
+@pytest.mark.asyncio
+async def test_me_blocked_user_token_rejected(client):
+    """Токен заблокированного пользователя не должен работать."""
+    user = await UserFactory.create(status=UserStatus.BLOCKED)
+    headers = make_auth_header(user)
+    response = await client.get('/api/auth/me', headers=headers)
+    assert response.status_code == 401
+    assert response.json()['detail'] == 'Account blocked'

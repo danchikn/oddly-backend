@@ -1,3 +1,4 @@
+import logging
 from uuid import UUID, uuid4
 
 from tortoise.exceptions import IntegrityError
@@ -7,6 +8,8 @@ from src.modules.auth.exceptions import EmailAlreadyExistsError, PhoneAlreadyExi
 
 from .dto import UpdateUserRequest
 from .models import User, UserStatus
+
+logger = logging.getLogger(__name__)
 
 
 async def get_user_by_id(user_id: UUID) -> User:
@@ -29,6 +32,7 @@ async def update_user(user: User, data: UpdateUserRequest) -> User:
         if 'phone' in error_msg:
             raise PhoneAlreadyExistsError() from e
         raise
+    logger.info('User updated profile: user_id=%s', user.id)
     return user
 
 
@@ -38,3 +42,4 @@ async def soft_delete_user(user: User) -> None:
     user.email = user.email + suffix
     user.phone_number = user.phone_number + suffix
     await user.save()
+    logger.info('User soft-deleted: user_id=%s', user.id)

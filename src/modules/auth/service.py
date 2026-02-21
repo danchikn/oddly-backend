@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
@@ -14,6 +15,8 @@ from .exceptions import (
     InvalidCredentialsError,
     PhoneAlreadyExistsError,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def hash_password(password: str) -> str:
@@ -44,6 +47,11 @@ async def register_user(
     name: str | None,
     password: str,
 ) -> tuple[User, str]:
+    if await User.filter(email=email).exists():
+        raise EmailAlreadyExistsError()
+    if await User.filter(phone_number=phone_number).exists():
+        raise PhoneAlreadyExistsError()
+
     try:
         user = await User.create(
             email=email,
@@ -53,14 +61,11 @@ async def register_user(
             password_hash=hash_password(password),
         )
     except IntegrityError as e:
-        error_msg = str(e).lower()
-        if 'email' in error_msg:
-            raise EmailAlreadyExistsError() from e
-        if 'phone' in error_msg:
-            raise PhoneAlreadyExistsError() from e
-        raise
+        logger.warning('IntegrityError during registration: %s', e)
+        raise EmailAlreadyExistsError() from e
 
     token = create_access_token(str(user.id), user.role.value)
+    logger.info('User registered: user_id=%s, email=%s, role=%s', user.id, user.email, user.role.value)
     return user, token
 
 
@@ -69,9 +74,11 @@ async def login_user(identifier: str, password: str) -> tuple[User, str]:
     if not user:
         user = await User.filter(phone_number=identifier).first()
     if not user:
+        logger.warning('Failed login attempt: identifier=%s, reason=not_found', identifier)
         raise InvalidCredentialsError()
 
     if not verify_password(password, user.password_hash):
+        logger.warning('Failed login attempt: identifier=%s, reason=wrong_password', identifier)
         raise InvalidCredentialsError()
 
     if user.status == UserStatus.DELETED:
@@ -79,7 +86,9 @@ async def login_user(identifier: str, password: str) -> tuple[User, str]:
 
     if user.status == UserStatus.BLOCKED:
         if user.blocked_until and user.blocked_until > datetime.now(timezone.utc):
+            logger.warning('Blocked account login attempt: user_id=%s', user.id)
             raise AccountBlockedError()
 
     token = create_access_token(str(user.id), user.role.value)
+    logger.info('User logged in: user_id=%s', user.id)
     return user, token
