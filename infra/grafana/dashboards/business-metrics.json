@@ -1,0 +1,106 @@
+{
+  "title": "Oddly — Business Metrics",
+  "uid": "oddly-business",
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "title": "Registrations (req/min)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{handler=\"/api/v1/auth/register\", status=\"201\"}[5m]) * 60",
+          "legendFormat": "registrations"
+        }
+      ]
+    },
+    {
+      "title": "Logins (req/min)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{handler=\"/api/v1/auth/login\", status=\"200\"}[5m]) * 60",
+          "legendFormat": "logins"
+        }
+      ]
+    },
+    {
+      "title": "Email Verifications (req/min)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{handler=\"/api/v1/auth/verify\", status=\"200\"}[5m]) * 60",
+          "legendFormat": "verifications"
+        }
+      ]
+    },
+    {
+      "title": "Offers Created (req/min)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{handler=\"/api/v1/offers\", method=\"POST\", status=\"201\"}[5m]) * 60",
+          "legendFormat": "offers created"
+        }
+      ]
+    },
+    {
+      "title": "Reservations Created (req/min)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 8 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{handler=\"/api/v1/reservations\", method=\"POST\", status=\"201\"}[5m]) * 60",
+          "legendFormat": "reservations"
+        }
+      ]
+    },
+    {
+      "title": "Reviews Created (req/min)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 8 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{handler=\"/api/v1/reviews\", method=\"POST\", status=\"201\"}[5m]) * 60",
+          "legendFormat": "reviews"
+        }
+      ]
+    },
+    {
+      "title": "Feed Requests (req/min)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{handler=\"/api/v1/feed\"}[5m]) * 60",
+          "legendFormat": "feed views"
+        }
+      ]
+    },
+    {
+      "title": "Failed Auth (401s / min)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total{status=\"401\"}[5m]) * 60",
+          "legendFormat": "401 {{handler}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39
+}

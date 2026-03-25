@@ -17,8 +17,20 @@ class Settings(BaseSettings):
     UPLOAD_MAX_SIZE: int = 5 * 1024 * 1024  # 5 MB
     UPLOAD_ALLOWED_TYPES: list[str] = ['image/jpeg', 'image/png', 'image/webp']
 
+    RABBITMQ_URL: str = 'amqp://guest:guest@localhost:5672/'
+
+    SMTP_HOST: str = 'smtp.gmail.com'
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ''
+    SMTP_PASSWORD: str = ''
+    SMTP_FROM: str = ''
+
+    REDIS_URL: str = 'redis://localhost:6379/0'
+    VERIFY_CODE_TTL: int = 600  # 10 minutes
+
     class Config:
         env_file = '.env'
+        extra = 'ignore'
 
 
 settings = Settings()

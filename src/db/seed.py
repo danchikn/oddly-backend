@@ -1,16 +1,19 @@
 import asyncio
-import logging
+from loguru import logger
 from datetime import datetime, timedelta, timezone
 
 from tortoise import Tortoise
 
 from src.db import TORTOISE_ORM
-from src.modules.auth.service import hash_password
-from src.modules.offers.models import Offer, OfferStatus
-from src.modules.users.models import User, UserRole
+import bcrypt
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+from src.domain.models.offer import Offer, OfferStatus
+from src.domain.models.user import User, UserRole
+
+
 
 RESTAURANT_LOCATION = 'https://maps.google.com/?q=41.2995,69.2401'
 
@@ -116,6 +119,8 @@ async def seed() -> None:
                 status=OfferStatus.OPEN,
                 description=data['description'],
                 location_url=data['location_url'],
+                latitude=41.2995,
+                longitude=69.2401,
                 pickup_from=now + timedelta(hours=data['hours_from_now']),
                 pickup_to=now + timedelta(hours=data['hours_from_now'] + data['hours_window']),
             )

@@ -1,10 +1,9 @@
-import logging
+from loguru import logger
 
 from tortoise import Tortoise
 
 from src.core.config import settings
 
-logger = logging.getLogger(__name__)
 
 TORTOISE_ORM = {
     'connections': {
@@ -13,9 +12,10 @@ TORTOISE_ORM = {
     'apps': {
         'models': {
             'models': [
-                'src.modules.users.models',
-                'src.modules.offers.models',
-                'src.modules.reservations.models',
+                'src.domain.models.user',
+                'src.domain.models.offer',
+                'src.domain.models.reservation',
+                'src.domain.models.review',
                 'aerich.models',
             ],
             'default_connection': 'default',

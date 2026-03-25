@@ -2,6 +2,8 @@
 #    uv pip compile pyproject.toml -o requirements.txt
 aerich==0.7.2
     # via oddly (pyproject.toml)
+aio-pika==9.6.2
+    # via faststream
 aioboto3==15.5.0
     # via oddly (pyproject.toml)
 aiobotocore==2.25.1
@@ -14,8 +16,12 @@ aiohttp==3.13.3
     # via aiobotocore
 aioitertools==0.13.0
     # via aiobotocore
+aiormq==6.9.4
+    # via aio-pika
 aiosignal==1.4.0
     # via aiohttp
+aiosmtplib==5.1.0
+    # via oddly (pyproject.toml)
 aiosqlite==0.22.1
     # via tortoise-orm
 annotated-doc==0.0.4
@@ -26,6 +32,8 @@ annotated-types==0.7.0
     # via pydantic
 anyio==4.12.1
     # via
+    #   fast-depends
+    #   faststream
     #   httpx
     #   starlette
     #   watchfiles
@@ -53,6 +61,8 @@ click==8.3.1
     #   rich-toolkit
     #   typer
     #   uvicorn
+dependency-injector==4.49.0
+    # via oddly (pyproject.toml)
 deprecated==1.3.1
     # via limits
 dictdiffer==0.9.0
@@ -63,6 +73,8 @@ email-validator==2.3.0
     # via
     #   fastapi
     #   pydantic
+fast-depends==3.0.8
+    # via faststream
 fastapi==0.129.0
     # via oddly (pyproject.toml)
 fastapi-cli==0.0.21
@@ -71,6 +83,8 @@ fastapi-cloud-cli==0.12.0
     # via fastapi-cli
 fastar==0.8.0
     # via fastapi-cloud-cli
+faststream==0.6.7
+    # via oddly (pyproject.toml)
 frozenlist==1.8.0
     # via
     #   aiohttp
@@ -79,6 +93,8 @@ h11==0.16.0
     # via
     #   httpcore
     #   uvicorn
+hiredis==3.3.1
+    # via redis
 httpcore==1.0.9
     # via httpx
 httptools==0.7.1
@@ -104,6 +120,8 @@ jmespath==1.1.0
     #   botocore
 limits==5.8.0
     # via slowapi
+loguru==0.7.3
+    # via oddly (pyproject.toml)
 markdown-it-py==4.0.0
     # via rich
 markupsafe==3.0.3
@@ -117,6 +135,12 @@ multidict==6.7.1
     #   yarl
 packaging==26.0
     # via limits
+pamqp==3.3.0
+    # via aiormq
+prometheus-client==0.24.1
+    # via prometheus-fastapi-instrumentator
+prometheus-fastapi-instrumentator==7.1.0
+    # via oddly (pyproject.toml)
 propcache==0.4.1
     # via
     #   aiohttp
@@ -125,6 +149,7 @@ pydantic==2.12.5
     # via
     #   oddly (pyproject.toml)
     #   aerich
+    #   fast-depends
     #   fastapi
     #   fastapi-cloud-cli
     #   pydantic-extra-types
@@ -157,6 +182,8 @@ pytz==2025.2
     # via tortoise-orm
 pyyaml==6.0.3
     # via uvicorn
+redis==7.4.0
+    # via oddly (pyproject.toml)
 rich==14.3.2
     # via
     #   rich-toolkit
@@ -178,7 +205,9 @@ six==1.17.0
 slowapi==0.1.9
     # via oddly (pyproject.toml)
 starlette==0.52.1
-    # via fastapi
+    # via
+    #   fastapi
+    #   prometheus-fastapi-instrumentator
 tomlkit==0.14.0
     # via aerich
 tortoise-orm==0.25.1
@@ -193,7 +222,10 @@ typing-extensions==4.15.0
     # via
     #   aiosignal
     #   anyio
+    #   dependency-injector
+    #   fast-depends
     #   fastapi
+    #   faststream
     #   limits
     #   pydantic
     #   pydantic-core
@@ -217,7 +249,9 @@ uvicorn==0.40.0
     #   fastapi-cli
     #   fastapi-cloud-cli
 uvloop==0.22.1
-    # via uvicorn
+    # via
+    #   oddly (pyproject.toml)
+    #   uvicorn
 watchfiles==1.1.1
     # via uvicorn
 websockets==16.0
@@ -227,4 +261,7 @@ wrapt==1.17.3
     #   aiobotocore
     #   deprecated
 yarl==1.22.0
-    # via aiohttp
+    # via
+    #   aio-pika
+    #   aiohttp
+    #   aiormq

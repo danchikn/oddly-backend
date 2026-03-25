@@ -1,9 +1,9 @@
 import uuid
 
-from src.modules.auth.service import hash_password
-from src.modules.offers.models import Offer, OfferStatus
-from src.modules.reservations.models import Reservation, ReservationStatus
-from src.modules.users.models import User, UserRole, UserStatus
+from src.domain.services.auth_service import AuthService
+from src.domain.models.offer import Offer, OfferStatus
+from src.domain.models.reservation import Reservation, ReservationStatus
+from src.domain.models.user import User, UserRole, UserStatus
 
 
 def _random_email() -> str:
@@ -38,7 +38,7 @@ class UserFactory:
             'phone_number': _random_phone(),
             'role': role,
             'name': 'Test User',
-            'password_hash': hash_password(password),
+            'password_hash': AuthService._hash_password(password),
             'status': status,
         }
         return await User.create(**{**defaults, **overrides})

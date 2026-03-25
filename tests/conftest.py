@@ -1,32 +1,44 @@
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from httpx import ASGITransport, AsyncClient
+from testcontainers.postgres import PostgresContainer
 from tortoise import Tortoise
 
 from src.core.rate_limit import limiter
-from src.main import app
+from src.start_web import app
 from tests.support.auth import make_auth_header
 from tests.support.factories import UserFactory
 
 limiter.enabled = False
 
-TEST_DB_URL = 'asyncpg://postgres:postgres@localhost:5433/oddly-test'
+MODELS = [
+    'src.domain.models.user',
+    'src.domain.models.offer',
+    'src.domain.models.reservation',
+    'src.domain.models.review',
+]
 
-TORTOISE_TEST_CONFIG = {
-    'connections': {
-        'default': TEST_DB_URL,
-    },
-    'apps': {
-        'models': {
-            'models': ['src.modules.users.models', 'src.modules.offers.models', 'src.modules.reservations.models'],
-            'default_connection': 'default',
-        },
-    },
-}
+
+@pytest.fixture(scope='session')
+def postgres_url():
+    with PostgresContainer('postgres:16-alpine') as pg:
+        url = pg.get_connection_url().replace('postgresql+psycopg2://', 'asyncpg://')
+        yield url
 
 
 @pytest.fixture(autouse=True)
-async def db():
-    await Tortoise.init(config=TORTOISE_TEST_CONFIG)
+async def db(postgres_url):
+    config = {
+        'connections': {'default': postgres_url},
+        'apps': {
+            'models': {
+                'models': MODELS,
+                'default_connection': 'default',
+            },
+        },
+    }
+    await Tortoise.init(config=config)
     await Tortoise.generate_schemas()
     yield
     conn = Tortoise.get_connection('default')
@@ -36,6 +48,13 @@ async def db():
     for t in tables:
         await conn.execute_query(f'TRUNCATE TABLE "{t["tablename"]}" CASCADE')
     await Tortoise.close_connections()
+
+
+@pytest.fixture(autouse=True)
+def mock_event_sender():
+    with patch('src.producer.event_sender.EventSender.send_verification', new_callable=AsyncMock) as mock_verify, \
+         patch('src.producer.event_sender.EventSender.send_notification', new_callable=AsyncMock) as mock_notify:
+        yield {'send_verification': mock_verify, 'send_notification': mock_notify}
 
 
 @pytest.fixture
@@ -57,7 +76,7 @@ async def restaurant_user():
 
 @pytest.fixture
 async def farmer_user():
-    from src.modules.users.models import UserRole
+    from src.domain.models.user import UserRole
     return await UserFactory.create(role=UserRole.FARMER)
 
 

@@ -13,7 +13,14 @@ dependencies = [
     "bcrypt",
     "PyJWT",
     "aioboto3",
-    "slowapi"
+    "slowapi",
+    "faststream[rabbit]",
+    "aiosmtplib",
+    "redis[hiredis]",
+    "dependency-injector",
+    "prometheus-fastapi-instrumentator",
+    "uvloop",
+    "loguru",
 ]
 [project.optional-dependencies]
 dev = [
@@ -21,7 +28,7 @@ dev = [
     "pytest",
     "pytest-asyncio",
     "pytest-cov",
-    "pytest-env",
+    "testcontainers[postgres]",
     "ruff",
 ]
 
