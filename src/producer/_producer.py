@@ -7,7 +7,7 @@ from src.core.config import settings
 
 
 class Producer:
-    """RabbitMQ message producer singleton for publishing messages to exchanges. YES"""
+    """RabbitMQ message producer singleton for publishing messages to exchanges. YES 2"""
 
     _instance = None
     _initialized = False
