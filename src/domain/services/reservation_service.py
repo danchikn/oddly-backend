@@ -3,6 +3,7 @@ from uuid import UUID
 from loguru import logger
 from tortoise.transactions import in_transaction
 
+from src.constants import DESCRIPTION_TRUNCATE_LENGTH
 from src.domain.exceptions import (
     NotFarmerError,
     NotFoundError,
@@ -54,7 +55,7 @@ class ReservationService:
                 'recipient_email': owner.email,
                 'recipient_name': owner.name or owner.email,
                 'farmer_name': farmer.name or farmer.email,
-                'offer_description': offer.description[:100],
+                'offer_description': offer.description[:DESCRIPTION_TRUNCATE_LENGTH],
             })
 
         logger.info('Reservation created: id={}, offer={}, farmer={}', reservation.id, data_offer_id, farmer.id)
@@ -100,7 +101,7 @@ class ReservationService:
                     'recipient_email': owner.email,
                     'recipient_name': owner.name or owner.email,
                     'farmer_name': user.name or user.email,
-                    'offer_description': offer.description[:100],
+                    'offer_description': offer.description[:DESCRIPTION_TRUNCATE_LENGTH],
                 })
 
         logger.info('Reservation cancelled: id={}', reservation.id)
@@ -124,7 +125,7 @@ class ReservationService:
                 'recipient_email': farmer.email,
                 'recipient_name': farmer.name or farmer.email,
                 'owner_name': user.name or user.email,
-                'offer_description': offer.description[:100],
+                'offer_description': offer.description[:DESCRIPTION_TRUNCATE_LENGTH],
             })
 
         logger.info('Reservation completed: id={}', reservation.id)

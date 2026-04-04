@@ -52,10 +52,13 @@ class OfferRepository:
         limit: int = 20,
         lat: float | None = None,
         lng: float | None = None,
+        q: str | None = None,
     ) -> tuple[list[Offer], int]:
         from tortoise.expressions import RawSQL
 
         query = Offer.filter(status=OfferStatus.OPEN).select_related('owner')
+        if q:
+            query = query.filter(description__icontains=q)
         total = await query.count()
 
         if lat is not None and lng is not None:

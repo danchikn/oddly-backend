@@ -14,3 +14,5 @@ class NotificationEvent(BaseModel):
     farmer_name: str | None = None
     owner_name: str | None = None
     offer_description: str | None = None
+    author_name: str | None = None
+    rating: str | None = None

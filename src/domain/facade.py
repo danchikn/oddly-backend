@@ -4,6 +4,7 @@ from uuid import UUID
 from loguru import logger
 
 from src.clients.smtp import SmtpClient
+from src.constants import VERIFICATION_CODE_CHARS, VERIFICATION_CODE_LENGTH
 from src.core.config import settings
 from src.worker.schemas import NotificationEvent, VerificationEvent
 from src.domain.services.auth_service import AuthService
@@ -80,8 +81,8 @@ class Facade:
 
     # --- Feed ---
 
-    async def get_feed(self, page: int = 1, limit: int = 20, lat: float | None = None, lng: float | None = None):
-        return await self._feed.get_feed(page=page, limit=limit, lat=lat, lng=lng)
+    async def get_feed(self, page: int = 1, limit: int = 20, lat: float | None = None, lng: float | None = None, q: str | None = None):
+        return await self._feed.get_feed(page=page, limit=limit, lat=lat, lng=lng, q=q)
 
     # --- Reservations ---
 
@@ -114,10 +115,13 @@ class Facade:
     async def get_user_reviews(self, user_id: UUID, page: int = 1, limit: int = 20):
         return await self._review.get_user_reviews(user_id, page=page, limit=limit)
 
+    async def get_reviewed_reservation_ids(self, reservation_ids: list, author_id) -> set:
+        return await self._review.get_reviewed_set(reservation_ids, author_id)
+
     # --- Consumer handlers ---
 
     async def handle_verification(self, event: VerificationEvent) -> None:
-        code = ''.join(secrets.choice('0123456789') for _ in range(6))
+        code = ''.join(secrets.choice(VERIFICATION_CODE_CHARS) for _ in range(VERIFICATION_CODE_LENGTH))
 
         await self._redis.save_verification_code(event.email, code)
 
@@ -146,6 +150,11 @@ class Facade:
             'subject': 'Oddly — Reservation Completed',
             'body': 'Hi {recipient_name},\n\n{owner_name} has confirmed the pickup for:\n'
                     '"{offer_description}"\n\nThank you for using Oddly!\n\n— Oddly Team',
+        },
+        'review.created': {
+            'subject': 'Oddly — New Review Received',
+            'body': 'Hi {recipient_name},\n\n{author_name} left you a {rating}-star review.\n\n'
+                    'Check your reviews page to see it.\n\n— Oddly Team',
         },
     }
 

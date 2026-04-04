@@ -11,7 +11,7 @@ import bcrypt
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 from src.domain.models.offer import Offer, OfferStatus
-from src.domain.models.user import User, UserRole
+from src.domain.models.user import User, UserRole, UserStatus
 
 
 
@@ -82,6 +82,7 @@ async def seed() -> None:
             'name': 'Green Kitchen',
             'password_hash': hash_password('Restaurant123'),
             'location_url': RESTAURANT_LOCATION,
+            'status': UserStatus.ACTIVE,
         },
     )
     logger.info(
@@ -98,6 +99,7 @@ async def seed() -> None:
             'role': UserRole.FARMER,
             'name': 'Ali the Farmer',
             'password_hash': hash_password('Farmer123'),
+            'status': UserStatus.ACTIVE,
         },
     )
     logger.info(

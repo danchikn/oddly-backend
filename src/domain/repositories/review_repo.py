@@ -4,6 +4,12 @@ from src.domain.models.review import Review
 
 
 class ReviewRepository:
+    async def get_reviewed_set(self, reservation_ids: list[UUID], author_id: UUID) -> set[UUID]:
+        rows = await Review.filter(
+            reservation_id__in=reservation_ids, author_id=author_id,
+        ).values_list('reservation_id', flat=True)
+        return set(rows)
+
     async def exists(self, reservation_id: UUID, author_id: UUID) -> bool:
         return await Review.filter(reservation_id=reservation_id, author_id=author_id).exists()
 
@@ -22,7 +28,7 @@ class ReviewRepository:
         total = await query.count()
         reviews = await (
             query
-            .select_related('author')
+            .select_related('author', 'reservation', 'reservation__offer')
             .order_by('-created_at')
             .offset((page - 1) * limit)
             .limit(limit)

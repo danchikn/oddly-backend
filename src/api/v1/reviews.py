@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query, status
 
 from src.api.dependencies import get_current_user
-from src.api.schemas.review import CreateReviewRequest, ReviewResponse, UserRatingResponse
+from src.api.schemas.review import CreateReviewRequest, ReviewOfferInfo, ReviewResponse, UserRatingResponse
 from src.dependencies import get_facade
 from src.domain.facade import Facade
 from src.domain.models.user import User
@@ -34,6 +34,10 @@ async def get_user_reviews(user_id: UUID, page: int = Query(1, ge=1), limit: int
                 author_id=r.author_id, target_id=r.target_id,
                 rating=r.rating, comment=r.comment,
                 author_name=r.author.name if r.author else None,
+                offer=ReviewOfferInfo(
+                    id=r.reservation.offer.id,
+                    description=r.reservation.offer.description,
+                ) if getattr(r, 'reservation', None) and getattr(r.reservation, 'offer', None) else None,
                 created_at=r.created_at,
             ) for r in reviews
         ],

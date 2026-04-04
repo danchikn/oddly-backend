@@ -10,6 +10,11 @@ class CreateReviewRequest(BaseModel):
     comment: str | None = None
 
 
+class ReviewOfferInfo(BaseModel):
+    id: UUID
+    description: str
+
+
 class ReviewResponse(BaseModel):
     id: UUID
     reservation_id: UUID
@@ -18,6 +23,7 @@ class ReviewResponse(BaseModel):
     rating: int
     comment: str | None
     author_name: str | None = None
+    offer: ReviewOfferInfo | None = None
     created_at: datetime
 
     class Config:

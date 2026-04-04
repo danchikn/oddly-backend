@@ -73,6 +73,8 @@ class DIContainer(containers.DeclarativeContainer):
         review_repo=review_repo,
         reservation_repo=reservation_repo,
         offer_repo=offer_repo,
+        user_repo=user_repo,
+        event_sender=event_sender,
     )
 
     # --- Facade ---

@@ -25,7 +25,8 @@ async def feed(
     page: int = Query(1, ge=1), limit: int = Query(20, ge=1, le=100),
     lat: float | None = Query(None, ge=-90, le=90),
     lng: float | None = Query(None, ge=-180, le=180),
+    q: str | None = Query(None, min_length=1, max_length=200),
     facade: Facade = Depends(get_facade),
 ):
-    items, total = await facade.get_feed(page=page, limit=limit, lat=lat, lng=lng)
+    items, total = await facade.get_feed(page=page, limit=limit, lat=lat, lng=lng, q=q)
     return OfferListResponse(items=[_to_response(o) for o in items], total=total, page=page, limit=limit)
