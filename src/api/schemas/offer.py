@@ -18,6 +18,7 @@ class CreateOfferRequest(BaseModel):
     pickup_to: datetime | None = None
     location_url: str = Field(..., min_length=1)
     photos: list[str] | None = None
+    price: float | None = Field(None, ge=0, description='Price in KZT. None means free.')
 
     @field_validator('location_url')
     @classmethod
@@ -31,6 +32,7 @@ class UpdateOfferRequest(BaseModel):
     pickup_to: datetime | None = None
     location_url: str | None = None
     photos: list[str] | None = None
+    price: float | None = None
 
     @field_validator('location_url')
     @classmethod
@@ -55,6 +57,7 @@ class OfferResponse(BaseModel):
     pickup_to: datetime | None
     location_url: str
     photos: list[str] | None
+    price: float | None = None
     owner: OwnerInfo | None = None
     created_at: datetime
     updated_at: datetime

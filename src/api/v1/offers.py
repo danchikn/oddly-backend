@@ -21,6 +21,7 @@ def _to_response(offer) -> OfferResponse:
         description=offer.description, pickup_from=offer.pickup_from,
         pickup_to=offer.pickup_to, location_url=offer.location_url,
         photos=offer.photos, owner=owner,
+        price=float(offer.price) if offer.price is not None else None,
         created_at=offer.created_at, updated_at=offer.updated_at,
     )
 
@@ -49,7 +50,8 @@ async def get_one(offer_id: UUID, facade: Facade = Depends(get_facade)):
 @router.patch('/{offer_id}', response_model=OfferResponse)
 async def update(offer_id: UUID, body: UpdateOfferRequest, user: User = Depends(get_current_user), facade: Facade = Depends(get_facade)):
     offer = await facade.get_offer(offer_id)
-    offer = await facade.update_offer(offer, user, body.model_dump(exclude_none=True))
+    data = body.model_dump(exclude_unset=True)  # use exclude_unset so price=null can clear the field
+    offer = await facade.update_offer(offer, user, data)
     return _to_response(offer)
 
 

@@ -29,6 +29,7 @@ def _offer_info(offer) -> ReservationOfferInfo | None:
         location_url=offer.location_url,
         photos=offer.photos,
         status=offer.status,
+        price=float(offer.price) if offer.price is not None else None,
     )
 
 
@@ -63,6 +64,7 @@ def _to_response(r, *, current_user: User | None = None, reviewed_ids: set | Non
         offer_id=r.offer_id,
         farmer_id=r.farmer_id,
         status=r.status,
+        payment_status=getattr(r, 'payment_status', 'UNPAID'),
         created_at=r.created_at,
         updated_at=r.updated_at,
         offer=_offer_info(offer),

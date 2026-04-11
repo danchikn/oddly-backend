@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     REDIS_URL: str = 'redis://localhost:6379/0'
     VERIFY_CODE_TTL: int = 600  # 10 minutes
 
+    STRIPE_SECRET_KEY: str = ''
+    FRONTEND_URL: str = 'http://localhost:3000'
+
     class Config:
         env_file = '.env'
         extra = 'ignore'

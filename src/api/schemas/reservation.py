@@ -19,6 +19,7 @@ class ReservationOfferInfo(BaseModel):
     location_url: str
     photos: list[str] | None
     status: OfferStatus
+    price: float | None = None
 
 
 class CounterpartyInfo(BaseModel):
@@ -32,6 +33,7 @@ class ReservationResponse(BaseModel):
     offer_id: UUID
     farmer_id: UUID
     status: ReservationStatus
+    payment_status: str = 'UNPAID'
     created_at: datetime
     updated_at: datetime
     offer: ReservationOfferInfo | None = None
