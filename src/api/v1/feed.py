@@ -15,7 +15,7 @@ def _to_response(o) -> OfferResponse:
         id=o.id, owner_id=o.owner_id, status=o.status,
         description=o.description, pickup_from=o.pickup_from,
         pickup_to=o.pickup_to, location_url=o.location_url,
-        photos=o.photos, owner=owner,
+        photos=o.photos, price=float(o.price) if o.price is not None else None, owner=owner,
         created_at=o.created_at, updated_at=o.updated_at,
     )
 
