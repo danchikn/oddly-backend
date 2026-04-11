@@ -229,7 +229,9 @@ pyyaml==6.0.3
 redis==7.4.0
     # via oddly (pyproject.toml)
 requests==2.33.0
-    # via docker
+    # via
+    #   docker
+    #   stripe
 rich==14.3.2
     # via
     #   rich-toolkit
@@ -256,6 +258,8 @@ starlette==0.52.1
     # via
     #   fastapi
     #   prometheus-fastapi-instrumentator
+stripe==15.0.1
+    # via oddly (pyproject.toml)
 testcontainers==4.14.2
     # via oddly (pyproject.toml)
 tomlkit==0.14.0
@@ -283,6 +287,7 @@ typing-extensions==4.15.0
     #   pytest-asyncio
     #   rich-toolkit
     #   starlette
+    #   stripe
     #   testcontainers
     #   typing-inspection
 typing-inspection==0.4.2

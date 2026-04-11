@@ -110,6 +110,23 @@ class ReservationNotCompletableError(BadRequestError):
         super().__init__('Reservation cannot be completed in current status')
 
 
+# --- Payments ---
+
+class OfferHasNoPriceError(BadRequestError):
+    def __init__(self):
+        super().__init__('This offer has no price — it is free')
+
+
+class ReservationAlreadyPaidError(BadRequestError):
+    def __init__(self):
+        super().__init__('This reservation is already paid')
+
+
+class PaymentNotCompletedError(BadRequestError):
+    def __init__(self):
+        super().__init__('Payment has not been completed')
+
+
 # --- Reviews ---
 
 class ReservationNotCompletedError(BadRequestError):

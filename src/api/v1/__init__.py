@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from .auth import router as auth_router
 from .feed import router as feed_router
 from .offers import router as offers_router
+from .payments import router as payments_router
 from .reservations import router as reservations_router
 from .reviews import router as reviews_router
 from .uploads import router as uploads_router
@@ -17,3 +18,4 @@ router.include_router(feed_router)
 router.include_router(reservations_router)
 router.include_router(reviews_router)
 router.include_router(uploads_router)
+router.include_router(payments_router)

@@ -15,6 +15,8 @@ class Reservation(Model):
     offer = fields.ForeignKeyField('models.Offer', related_name='reservations')
     farmer = fields.ForeignKeyField('models.User', related_name='reservations')
     status = fields.CharEnumField(ReservationStatus, default=ReservationStatus.ACTIVE)
+    payment_status = fields.CharField(max_length=20, default='UNPAID')  # UNPAID | PAID
+    stripe_session_id = fields.CharField(max_length=255, null=True)
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
 

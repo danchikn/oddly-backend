@@ -54,7 +54,10 @@ certifi==2026.1.4
     # via
     #   httpcore
     #   httpx
+    #   requests
     #   sentry-sdk
+charset-normalizer==3.4.7
+    # via requests
 click==8.3.1
     # via
     #   aerich
@@ -108,6 +111,7 @@ idna==3.11
     #   anyio
     #   email-validator
     #   httpx
+    #   requests
     #   yarl
 iso8601==2.1.0
     # via tortoise-orm
@@ -184,6 +188,8 @@ pyyaml==6.0.3
     # via uvicorn
 redis==7.4.0
     # via oddly (pyproject.toml)
+requests==2.33.1
+    # via stripe
 rich==14.3.2
     # via
     #   rich-toolkit
@@ -208,6 +214,8 @@ starlette==0.52.1
     # via
     #   fastapi
     #   prometheus-fastapi-instrumentator
+stripe==15.0.1
+    # via oddly (pyproject.toml)
 tomlkit==0.14.0
     # via aerich
 tortoise-orm==0.25.1
@@ -232,6 +240,7 @@ typing-extensions==4.15.0
     #   pydantic-extra-types
     #   rich-toolkit
     #   starlette
+    #   stripe
     #   typing-inspection
 typing-inspection==0.4.2
     # via
@@ -241,6 +250,7 @@ typing-inspection==0.4.2
 urllib3==2.6.3
     # via
     #   botocore
+    #   requests
     #   sentry-sdk
 uvicorn==0.40.0
     # via

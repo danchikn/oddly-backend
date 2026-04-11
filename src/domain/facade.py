@@ -10,6 +10,7 @@ from src.worker.schemas import NotificationEvent, VerificationEvent
 from src.domain.services.auth_service import AuthService
 from src.domain.services.feed_service import FeedService
 from src.domain.services.offer_service import OfferService
+from src.domain.services.payment_service import PaymentService
 from src.domain.services.reservation_service import ReservationService
 from src.domain.services.review_service import ReviewService
 from src.domain.services.user_service import UserService
@@ -25,6 +26,7 @@ class Facade:
         feed_service: FeedService,
         reservation_service: ReservationService,
         review_service: ReviewService,
+        payment_service: PaymentService,
         smtp_client: SmtpClient,
         redis_client: RedisClient,
     ) -> None:
@@ -34,6 +36,7 @@ class Facade:
         self._feed = feed_service
         self._reservation = reservation_service
         self._review = review_service
+        self._payment = payment_service
         self._smtp = smtp_client
         self._redis = redis_client
 
@@ -106,6 +109,14 @@ class Facade:
 
     async def get_incoming_reservations(self, user, status=None, page: int = 1, limit: int = 20):
         return await self._reservation.get_incoming(user, status=status, page=page, limit=limit)
+
+    # --- Payments ---
+
+    async def create_checkout_session(self, user, reservation_id) -> str:
+        return await self._payment.create_checkout_session(user, reservation_id)
+
+    async def verify_payment(self, session_id: str, user) -> bool:
+        return await self._payment.verify_and_mark_paid(session_id, user)
 
     # --- Reviews ---
 

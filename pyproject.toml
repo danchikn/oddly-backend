@@ -21,6 +21,7 @@ dependencies = [
     "prometheus-fastapi-instrumentator",
     "uvloop",
     "loguru",
+    "stripe",
 ]
 [project.optional-dependencies]
 dev = [

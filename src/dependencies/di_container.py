@@ -10,6 +10,7 @@ from src.domain.repositories.user_repo import UserRepository
 from src.domain.services.auth_service import AuthService
 from src.domain.services.feed_service import FeedService
 from src.domain.services.offer_service import OfferService
+from src.domain.services.payment_service import PaymentService
 from src.domain.services.reservation_service import ReservationService
 from src.domain.services.review_service import ReviewService
 from src.domain.services.user_service import UserService
@@ -77,6 +78,11 @@ class DIContainer(containers.DeclarativeContainer):
         event_sender=event_sender,
     )
 
+    payment_service = providers.Singleton(
+        PaymentService,
+        reservation_repo=reservation_repo,
+    )
+
     # --- Facade ---
 
     facade = providers.Singleton(
@@ -87,6 +93,7 @@ class DIContainer(containers.DeclarativeContainer):
         feed_service=feed_service,
         reservation_service=reservation_service,
         review_service=review_service,
+        payment_service=payment_service,
         smtp_client=smtp_client,
         redis_client=redis_client,
     )
